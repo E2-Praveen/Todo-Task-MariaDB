@@ -1,0 +1,219 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,body{
+    width: 100%;
+    height: 100%;
+    background-color: #98b9da;
+}
+
+.container{
+    width: 100%;
+    height: 100%;
+    text-align: center; 
+    margin: auto;
+}
+
+.alignment{
+    width: 40%;
+    height: 100%;
+    display: inline-block;
+}
+
+#itemForm{
+    width: 100%;
+    height: 22%;
+}
+
+.header{
+    width: 100%;
+    height: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.input-group{
+    width: 100%;
+    height: 50%;
+    display: inherit;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.error{
+    display: flex;
+    color: red;
+    font-size: 17px;
+    height: 11px;
+}
+
+#itemInput{
+    width: 73%;
+    height: 45%;
+    border: 6px solid white;
+    border-radius: 4px;
+}
+
+.addbutton{
+    width: 25%;
+    height: 45%;
+    border: 9px solid crimson;
+    border-radius: 4px;
+    background-color: crimson;
+    font-size: x-small;
+    cursor: pointer;
+}
+
+.navtab{
+    width: 100%;
+    height: 10%;
+    display: flex;
+    align-items: center;
+}
+
+.nav-nav-tabs{
+    width: 100%;
+    height: 55%;
+    display: inline-flex;
+    justify-content: space-evenly;
+    list-style: none;
+    background-color: white;
+    align-items: center;
+    border-radius: 4px;
+}
+
+.nav-item{
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+.nav-link{
+    text-decoration: none;
+    color: black;
+}
+
+.active{
+    width: 100%;
+    height: 100%;
+    background-color: crimson;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.todolistli{
+    width: 100%;
+    height: 68%;
+}
+
+.listitems{
+    width: 100%;
+    height: 80%;  
+}
+
+#itemList{
+    width: 100%;
+    height: 92%;
+    overflow: auto;
+    overflow-x: hidden;
+}   
+
+.list-group-item{
+    width: 100%;
+    height: 10%;
+    text-align: left;
+    background-color: white;
+    align-items: center;
+    display: flex;
+    margin: 1px;
+    border-radius: 5px;
+}
+
+.icons{
+    display: flex; 
+    justify-content: right;
+    float: right;
+    flex: 1;
+    margin-right: 6px;
+}
+
+.green {
+    color: green;
+}
+
+.fa-check-double{
+    padding-left: 5px;
+}
+
+.fa-edit{
+    color: grey;
+    padding-right: 5px;
+}
+
+.fa-trash-alt{
+    color: red;
+    
+}
+
+.bi-check-circle::before {
+    content: "\f26b";
+    margin-right: 7px;
+}
+
+.bi-check-circle-fill::before {
+    content: "\f26a";
+    margin-right: 7px;
+}
+
+span.title{
+    display: inline-block;
+    width: 75%;
+    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+    margin-left: 3px;
+}
+
+button.deleteAll {
+    background-color: crimson;
+    color: white;
+    padding: 1%;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button.deleteMultiple {
+    margin-right: 1%;
+    padding: 1%;
+    background-color: crimson;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.deleteBtn {
+    width: 100%;
+    height: 8%;
+    display: flex;
+    float: right;
+    justify-content: end;
+    margin-bottom: 1%;
+}
+
+@media only screen and (max-width: 768px) {
+    .alignment{
+        width: 80%;   
+    }
+}
