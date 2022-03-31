@@ -332,7 +332,7 @@ function deleteMultiple() {
     checkboxes.forEach((checkbox) => {
         values.push(checkbox.value)
     });
-    if (values > 0) {
+    if (values.length > 0) {
         console.log("values", values)
         if (confirm("Are sure want to delete the Selected Task?") == true) {
             fetch('http://localhost:3000/deleteRandomTask', {
