@@ -212,6 +212,10 @@ button.deleteMultiple {
     margin-bottom: 1%;
 }
 
+input[type="checkbox"] {
+    margin-left: 1%;
+}
+
 @media only screen and (max-width: 768px) {
     .alignment{
         width: 80%;   
