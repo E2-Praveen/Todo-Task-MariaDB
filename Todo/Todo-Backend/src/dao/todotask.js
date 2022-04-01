@@ -71,7 +71,6 @@ function deleteAllTask() {
 }
 
 function deleteRandomTask(data) {
-    console.log(data.task_id)
     const where = {
         task_id: data.task_id
     }

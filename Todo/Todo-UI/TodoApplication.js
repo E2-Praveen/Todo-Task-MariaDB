@@ -200,9 +200,8 @@ const getList = async function () {
           status: response.status
         })))
         .then((res) => {
-            newvar = res.data.data
             if (res.status == 200) {
-                    return;
+                newvar = res.data.data;
                 } else {
                     iziToast.error({
                         title: 'Error',
