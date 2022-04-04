@@ -6,7 +6,6 @@ module.exports = {
     deleteTask: deleteTask,
     updateTask: updateTask,
     deleteAllTask: deleteAllTask,
-    deleteRandomTask: deleteRandomTask,
 }
 
 function createTask(data) {
@@ -21,17 +20,22 @@ function createTask(data) {
 }
 
 function deleteTask(data) {
-    const where = {
-        task_id: data.task_id
+    try{
+        const where = {
+            task_id: data.task_id
+        }
+        return new Promise((resolve, reject) => {
+            connection.Todo.destroy({ where: where }).then((rowsUpdated) => {
+                resolve(rowsUpdated);
+            }).catch(err => {
+                reject(err);
+                return;
+            });
+        })
+    }catch(e){
+        throw e.message;
     }
-    return new Promise((resolve, reject) => {
-        connection.Todo.destroy({ where: where }).then((rowsUpdated) => {
-            resolve(rowsUpdated);
-        }).catch(err => {
-            reject(err);
-            return;
-        });
-    })
+    
 }
 
 function updateTask(data) {
@@ -67,19 +71,5 @@ function deleteAllTask() {
             reject(err);
             return;
         })
-    })
-}
-
-function deleteRandomTask(data) {
-    const where = {
-        task_id: data.task_id
-    }
-    return new Promise((resolve, reject) => {
-        connection.Todo.destroy({ where: where }).then((rowsUpdated) => {
-            resolve(rowsUpdated);
-        }).catch(err => {
-            reject(err);
-            return;
-        });
     })
 }

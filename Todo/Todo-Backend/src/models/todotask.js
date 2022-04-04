@@ -5,11 +5,11 @@ module.exports = (sequelize, type) => {
             primaryKey: true,
             autoIncrement: true
         },
-        task: {
+        task_name: {
             type: type.STRING,
             required: true
         },
-        completed: {
+        task_status: {
             type: type.BOOLEAN,
             defaultValue: false
         },

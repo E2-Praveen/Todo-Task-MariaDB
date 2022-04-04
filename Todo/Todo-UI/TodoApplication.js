@@ -4,28 +4,28 @@ const itemList = document.querySelector("#itemList");
 const filters = document.querySelectorAll(".nav-item");
 const addbtn = document.querySelector(".addbutton");
 
-let newvar = [];
+let taskData = [];
 
-const getItemsFilter = function (type) {
-    let filterItems = [];
+const getItemsFilter = async function (type) {
+    let filterTask = [];
 
     switch (type) {
         case "todo":
-            filterItems = newvar.filter((item) => item.completed === false);
+            filterTask = taskData.filter((item) => item.task_status === false);
             break;
         case "done":
-            filterItems = newvar.filter((item) => item.completed);
+            filterTask = taskData.filter((item) => item.task_status);
             break;
         default:
-            filterItems = newvar;
+            filterTask = taskData;
     }
-    getList2(filterItems);
+    getList2(filterTask);
 };
 
 const updateItem = function (itemIndex, newValue) {
-    const newItem = newvar[itemIndex];
-    newItem.task = newValue;
-    newvar.splice(itemIndex, 1, newItem);
+    const newItem = taskData[itemIndex];
+    newItem.task_name = newValue;
+    taskData.splice(itemIndex, 1, newItem);
 
     fetch(`http://localhost:3000/updateTask`, {
         method: 'PUT',
@@ -33,37 +33,37 @@ const updateItem = function (itemIndex, newValue) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            task: newValue,
-            completed: newItem.completed,
+            task_name: newValue,
+            task_status: newItem.task_status,
             task_id: newItem.task_id
         })
     }).then((response) => response.json().then(data => ({
-          data: data,
-          status: response.status
-      })))
-      .then((res) => {
-          if (res.status == 200) {
-                iziToast.success({
-                    title: 'Task',
-                    message: res.data.message,
-                    position: 'topRight',
-                });
-            } else {
-                iziToast.error({
-                    title: 'Error',
-                    message: res.data.message,
-                    position: 'topRight',
-                });
+            data: data,
+            status: response.status
+        })))
+        .then((res) => {
+            if (res.status == 200) {
+                  iziToast.success({
+                      title: 'Task',
+                      message: res.data.message,
+                      position: 'topRight',
+                    });
+                } else {
+                  iziToast.error({
+                      title: 'Error',
+                      message: res.data.message,
+                      position: 'topRight',
+                    });
             }
-          getList(newvar);
-      })
-      .catch(error => {
-          iziToast.error({
-              title: 'Error',
-              message: "something went wrong",
-              position: 'topRight',
+            getList(taskData);
+        })
+        .catch((error) => {
+            iziToast.error({
+                title: 'Error',
+                message: "something went wrong",
+                position: 'topRight',
             });
-      });
+        });
 };
 
 const removeData = function (itemData) {
@@ -73,8 +73,8 @@ const removeData = function (itemData) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            task: itemData.task,
-            completed: itemData.completed,
+            task_name: itemData.task_name,
+            task_status: itemData.task_status,
             task_id: itemData.task_id
         })
     }).then((response) => response.json().then(data => ({
@@ -95,9 +95,9 @@ const removeData = function (itemData) {
                         position: 'topRight',
                     });
                 }
-            getList(newvar);
+            getList(taskData);
         })
-        .catch(error => {
+        .catch((error) => {
             iziToast.error({
                 title: 'Error',
                 message: "something went wrong",
@@ -113,11 +113,11 @@ const handleItem = function (itemData) {
 
             item.querySelector("[data-done]").addEventListener("click", function (e) {
                 e.preventDefault();
-                const itemIndex = newvar.indexOf(itemData);
-                const currentItem = newvar[itemIndex];
-                const currentClass = currentItem.completed ? "bi-check-circle-fill" : "bi-check-circle";
-                currentItem.completed = currentItem.completed ? false : true;
-                newvar.splice(itemIndex, 1, currentItem);
+                const itemIndex = taskData.indexOf(itemData);
+                const currentItem = taskData[itemIndex];
+                const currentClass = currentItem.task_status ? "bi-check-circle-fill" : "bi-check-circle";
+                currentItem.task_status = currentItem.task_status ? false : true;
+                taskData.splice(itemIndex, 1, currentItem);
 
                 fetch(`http://localhost:3000/updateTask`, {
                     method: 'PUT',
@@ -125,8 +125,8 @@ const handleItem = function (itemData) {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        task: currentItem.task,
-                        completed: currentItem.completed,
+                        task_name: currentItem.task_name,
+                        task_status: currentItem.task_status,
                         task_id: currentItem.task_id
                     })
                 }).then((response) => response.json().then(data => ({
@@ -156,7 +156,7 @@ const handleItem = function (itemData) {
                         });
                     });
 
-                const iconClass = currentItem.completed ? "bi-check-circle-fill" : "bi-check-circle";
+                const iconClass = currentItem.task_status ? "bi-check-circle-fill" : "bi-check-circle";
                 this.firstElementChild.classList.replace(currentClass, iconClass);
                 const filterType = document.querySelector("#filterType").value;
                 getItemsFilter(filterType);
@@ -164,10 +164,10 @@ const handleItem = function (itemData) {
 
             item.querySelector("[data-edit]").addEventListener("click", function (e) {
                 e.preventDefault();
-                itemInput.value = itemData.task;
+                itemInput.value = itemData.task_name;
                 addbtn.innerHTML = "SAVE TASK";
-                document.querySelector("#citem").value = newvar.indexOf(itemData);
-                return newvar;
+                document.querySelector("#citem").value = taskData.indexOf(itemData);
+                return taskData;
             });
             addbtn.innerHTML = "ADD TASK";
 
@@ -181,7 +181,7 @@ const handleItem = function (itemData) {
                 });
                 filters[0].firstElementChild.classList.add("active");
 
-                return newvar.filter((item) => item != itemData);
+                return taskData.filter((item) => item != itemData);
             });
         }
     });
@@ -201,14 +201,14 @@ const getList = async function () {
         })))
         .then((res) => {
             if (res.status == 200) {
-                newvar = res.data.data;
-                } else {
-                    iziToast.error({
-                        title: 'Error',
-                        message: res.data.message,
-                        position: 'topRight',
-                    });
-                }
+                taskData = res.data.data;
+                } else{
+                iziToast.error({
+                    title: 'Error',
+                    message: res.data.message,
+                    position: 'topRight',
+                });
+            }
         })
         .catch(() => {
             iziToast.error({
@@ -218,13 +218,13 @@ const getList = async function () {
             });
         })
 
-    if (newvar.length > 0) {
-        newvar.forEach((item) => {
-            const iconClass = item.completed ? "bi-check-circle-fill" : "bi-check-circle";
+    if (taskData.length > 0) {
+        taskData.forEach((item) => {
+            const iconClass = item.task_status ? "bi-check-circle-fill" : "bi-check-circle";
             itemList.insertAdjacentHTML(
                 "beforeend",
                 `<li class="list-group-item"><input type="checkbox" value="${item.task_id}">
-          <span class="title" data-time="${item.createdAt}">${item.task}</span> 
+          <span class="title" data-time="${item.createdAt}">${item.task_name}</span> 
           <span class="icons">
               <a href="#" data-done title="click to complete"><i class="bi ${iconClass} green"></i></a>
               <a href="#" data-edit title="click to Edit"><i class="fas fa-edit"></i></a>
@@ -250,15 +250,15 @@ const getList = async function () {
 //     setInterval(getList, fetchInterval);
 // });
 
-const getList2 = function (newvar) {
+const getList2 = function (taskData) {
     itemList.innerHTML = "";
-    if (newvar.length > 0) {
-        newvar.forEach((item) => {
-            const iconClass = item.completed ? "bi-check-circle-fill" : "bi-check-circle";
+    if (taskData.length > 0) {
+        taskData.forEach((item) => {
+            const iconClass = item.task_status ? "bi-check-circle-fill" : "bi-check-circle";
             itemList.insertAdjacentHTML(
                 "beforeend",
                 `<li class="list-group-item"><input type="checkbox" value="${item.task_id}">
-          <span class="title" data-time="${item.createdAt}">${item.task}</span> 
+          <span class="title" data-time="${item.createdAt}">${item.task_name}</span> 
           <span class="icons">
               <a href="#" data-done title="click to complete"><i class="bi ${iconClass} green"></i></a>
               <a href="#" data-edit title="click to Edit"><i class="fas fa-edit"></i></a>
@@ -278,8 +278,8 @@ const getList2 = function (newvar) {
     }
 };
 
-function deleteAll() {
-    if (newvar.length > 0) {
+function deleteAllTask() {
+    if (taskData.length > 0) {
         if (confirm("Are sure want to delete All Task?") == true) {
             fetch('http://localhost:3000/deleteAllTask', {
                 method: 'DELETE',
@@ -304,7 +304,7 @@ function deleteAll() {
                                 position: 'topRight',
                             });
                         }
-                    getList(newvar);
+                    getList(taskData);
                 })
                 .catch((error) => {
                     iziToast.error({
@@ -325,7 +325,7 @@ function deleteAll() {
     }
 }
 
-function deleteMultiple() {
+function deleteSelectedTask() {
     let checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
     let values = [];
     checkboxes.forEach((checkbox) => {
@@ -334,7 +334,7 @@ function deleteMultiple() {
     if (values.length > 0) {
         console.log("values", values)
         if (confirm("Are sure want to delete the Selected Task?") == true) {
-            fetch('http://localhost:3000/deleteRandomTask', {
+            fetch('http://localhost:3000/deleteTask', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
@@ -360,9 +360,9 @@ function deleteMultiple() {
                                 position: 'topRight',
                             });
                         }
-                    getList(newvar);
+                    getList(taskData);
                 })
-                .catch(error => {
+                .catch((error) => {
                     iziToast.error({
                         title: 'Error',
                         message: "something went wrong",
@@ -381,6 +381,42 @@ function deleteMultiple() {
     }
 }
 
+const createTask = async function (itemData) {
+    await fetch('http://localhost:3000/createTask', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(itemData),
+            }).then((response) => response.json().then(data => ({
+                    data: data,
+                    status: response.status
+                })))
+                .then((res) => {
+                    if (res.status == 201) {
+                            iziToast.success({
+                                title: 'Task',
+                                message: res.data.message,
+                                position: 'topRight',
+                            });
+                        } else {
+                            iziToast.error({
+                                title: 'Task',
+                                message: res.data.message,
+                                position: 'topRight',
+                            });
+                        }
+                }).catch((error) => {
+                    iziToast.error({
+                        title: 'Error',
+                        message: "something went wrong",
+                        position: 'topRight',
+                    });
+                });
+            taskData.push(itemData);
+            getList(taskData);
+}
+
 const setError = (element, message) => {
     const inputControl = element.parentElement;
     const errorDisplay = inputControl.querySelector('.error');
@@ -390,9 +426,9 @@ const setError = (element, message) => {
 document.addEventListener("DOMContentLoaded", () => {
     form.addEventListener("submit", (e) => {
         e.preventDefault();
-        const itemName = itemInput.value.trim();
+        const taskValue = itemInput.value.trim();
 
-        if (itemName.length === 0) {
+        if (taskValue.length === 0) {
             setError(itemInput, 'Task is required');
             setTimeout(() => {
                 setError(itemInput, '')
@@ -401,45 +437,13 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             const currenItemIndex = document.querySelector("#citem").value;
             if (currenItemIndex) {
-                updateItem(currenItemIndex, itemName);
+                updateItem(currenItemIndex, taskValue);
                 document.querySelector("#citem").value = "";
             } else {
-                const itemObj = {
-                    task: itemName,
+                const taskObj = {
+                    task_name: taskValue,
                 };
-                fetch('http://localhost:3000/createTask', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(itemObj),
-                }).then((response) => response.json().then(data => ({
-                        data: data,
-                        status: response.status
-                    })))
-                    .then((res) => {
-                        if (res.status == 201) {
-                                iziToast.success({
-                                    title: 'Task',
-                                    message: res.data.message,
-                                    position: 'topRight',
-                                });
-                            } else {
-                                iziToast.error({
-                                    title: 'Task',
-                                    message: res.data.message,
-                                    position: 'topRight',
-                                });
-                            }
-                    }).catch((error) => {
-                        iziToast.error({
-                            title: 'Error',
-                            message: "something went wrong",
-                            position: 'topRight',
-                        });
-                    });
-                newvar.push(itemObj);
-                getList(newvar);
+                createTask(taskObj);
             }
             document.querySelectorAll(".nav-link").forEach((nav) => {
                 nav.classList.remove("active");
@@ -461,5 +465,5 @@ document.addEventListener("DOMContentLoaded", () => {
             getItemsFilter(tabType);
         });
     });
-    getList(newvar);
+    getList(taskData);
 });
